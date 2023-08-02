@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using TaskManagementSystem.Models;
+using TaskManagement.Web.Models;
 
-namespace TaskManagementSystem.Controllers
+namespace TaskManagement.Web.Controllers
 {
     public class HomeController : Controller
     {
