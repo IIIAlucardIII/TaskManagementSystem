@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TaskManagement.Persistence;
 using TaskManagment.Domain;
+using TaskManagement.Web.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,14 +11,18 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddRazorPages();
 builder.Services.AddDbContext<TaskManagementDbContext>(options =>
     options.UseSqlServer(connectionString));
+
+//builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+//    .AddEntityFrameworkStores<TaskManagementDbContext>();
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddIdentity<UserEntity, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddIdentity<UserEntity, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<TaskManagementDbContext>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
-
+SeedData.Seed(app);
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
