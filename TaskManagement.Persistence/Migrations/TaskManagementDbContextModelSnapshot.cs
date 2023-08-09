@@ -183,7 +183,7 @@ namespace TaskManagement.Persistence.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.ToTable("Tasks");
+                    b.ToTable("Tasks", (string)null);
                 });
 
             modelBuilder.Entity("TaskManagment.Domain.UserEntity", b =>

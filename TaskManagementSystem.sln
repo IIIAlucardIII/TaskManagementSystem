@@ -13,13 +13,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentatio
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{14660984-97AE-4DEA-A941-350CDCBA9EBA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagment.Domain", "TaskManagment.Domain\TaskManagment.Domain.csproj", "{18352365-B1E3-46DB-9B40-612061A355EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagment.Domain", "TaskManagment.Domain\TaskManagment.Domain.csproj", "{18352365-B1E3-46DB-9B40-612061A355EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagment.Application", "TaskManagment.Application\TaskManagment.Application.csproj", "{C0D5ABC6-3353-41A2-84A2-F24E9103F4D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagment.Application", "TaskManagment.Application\TaskManagment.Application.csproj", "{C0D5ABC6-3353-41A2-84A2-F24E9103F4D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagement.Persistence", "TaskManagement.Persistence\TaskManagement.Persistence.csproj", "{3C9783B3-5D51-4F1D-A093-FECF6501BEC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagement.Persistence", "TaskManagement.Persistence\TaskManagement.Persistence.csproj", "{3C9783B3-5D51-4F1D-A093-FECF6501BEC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagement.Web", "TaskManagement.Web\TaskManagement.Web.csproj", "{24DDD119-F639-4756-AEBA-3E8F1336DBC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagement.Web", "TaskManagement.Web\TaskManagement.Web.csproj", "{24DDD119-F639-4756-AEBA-3E8F1336DBC3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

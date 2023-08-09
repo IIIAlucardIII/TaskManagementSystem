@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using TaskManagement.Persistence.Configurations;
 using TaskManagment.Domain;
 
 namespace TaskManagement.Persistence
@@ -16,8 +16,7 @@ namespace TaskManagement.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<TaskEntity>().HasKey(t => t.Id);
-            modelBuilder.Entity<TaskEntity>().HasOne(t => t.CreatedBy).WithMany(u => u.Tasks).HasForeignKey(t => t.CreatedById);
+            new TaskEntityConfiguration().Configure(modelBuilder.Entity<TaskEntity>());
             base.OnModelCreating(modelBuilder);
             
         }
