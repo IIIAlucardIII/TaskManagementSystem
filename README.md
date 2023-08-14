@@ -39,7 +39,7 @@
 - Notifying users of upcoming task deadlines.
 - Displaying notifications for new comments and task status changes.
   
-9.Dashboard:
+9. Dashboard:
 
 - Displaying statistics on the number of completed and pending tasks.
 - Graphs depicting the current status of tasks.
