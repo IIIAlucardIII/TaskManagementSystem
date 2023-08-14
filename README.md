@@ -48,3 +48,7 @@
     
 - Granting additional privileges to administrators.
 - Viewing and managing users and their roles.
+  
+# DataBase Diagram
+
+![image](https://github.com/IIIAlucardIII/TaskManagementSystem/assets/37272233/d64e6219-d32f-4cae-83ad-9afa700c59e0)
