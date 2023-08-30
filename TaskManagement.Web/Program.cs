@@ -2,8 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TaskManagement.Persistence;
 using TaskManagment.Domain;
-using TaskManagement.Web.Data;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using AutoMapper;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +13,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddDbContext<TaskManagementDbContext>(options =>
     options.UseSqlServer(connectionString));
 
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 //    .AddEntityFrameworkStores<TaskManagementDbContext>();
 
