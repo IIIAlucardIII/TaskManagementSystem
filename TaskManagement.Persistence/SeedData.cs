@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TaskManagment.Domain;
+using TaskManagment.Domain.Enums;
+
 
 namespace TaskManagement.Persistence
 {
@@ -19,10 +20,42 @@ namespace TaskManagement.Persistence
                 {
                     var user = new UserEntity()
                     {
-                        UserName = "Palvo",
-                        Email = "palvo@.com",
+                        UserName = "pavlo@gmail.com",
+                        FirstName = "Pavlo",
+                        LastName = "Pavlovych",
+                        Email = "pavlo@gmail.com",
                     };
                     userManager.CreateAsync(user, "Palvic123.").GetAwaiter().GetResult();
+                    var tasks = new List<TaskEntity>()
+                    {
+                        new TaskEntity
+                        { 
+                            Name = "Red a book", 
+                            CreatedBy = user,
+                            Priority = TaskPriority.Low,
+                            Status = Status.NotStarted,
+                            CreatedDate = DateTime.Now,
+                            
+                        },
+                        new TaskEntity
+                        { 
+                            Name = "Do something", 
+                            CreatedBy = user,
+                            Priority = TaskPriority.Low,
+                            Status = Status.NotStarted,
+                            CreatedDate = DateTime.Now
+                        },
+                        new TaskEntity
+                        { 
+                            Name = "Programing", 
+                            CreatedBy= user,
+                            Priority = TaskPriority.Low,
+                            Status = Status.NotStarted,
+                            CreatedDate = DateTime.Now
+                        }
+                    };
+                    context.Tasks.AddRange(tasks);
+                    context.SaveChanges();
                 };
             }     
        }

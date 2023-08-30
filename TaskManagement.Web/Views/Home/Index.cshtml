@@ -2,7 +2,47 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .display-4 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #fff;
+        color: #000;
+        text-decoration: none;
+        border: 1px solid #000;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #000;
+        color: #fff;
+    }
+</style>
+
+<div class="container">
+    <div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <h2><a class="btn" href="/tasks">See your tasks</a></h2>
+    </div>
 </div>

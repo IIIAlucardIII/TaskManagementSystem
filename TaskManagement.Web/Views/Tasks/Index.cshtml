@@ -1,0 +1,141 @@
+﻿
+@model List<TaskModel>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<style>
+    .task-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .task-card {
+        border: 1px solid #ddd;
+        padding: 10px;
+        width: calc(33.33% - 20px);
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        border-radius: 10px;
+    }
+
+    .task-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .task-title {
+        font-weight: bold;
+        font-size: 1.2rem;
+        color: #0000FF;
+        background-color: #FFFFFF;
+        padding: 5px 10px;
+        border-radius: 10px 10px 0 0;
+        border: 1px solid #ddd;
+        margin: -10px -10px 0 -10px;
+    }
+
+    .task-info {
+        margin-top: 5px;
+    }
+
+    .task-status {
+        color: #006600;
+    }
+
+    .task-priority {
+        color: #990000;
+    }
+        .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #fff;
+        color: #000;
+        text-decoration: none;
+        border: 1px solid #000;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #000;
+        color: #fff;
+    }
+</style>
+
+<style>
+
+    /* Стилі для кнопок */
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .btn-cancel {
+        background-color: #fff;
+        color: #000;
+        border: 2px solid #000;
+        margin-right: 10px;
+    }
+
+    .btn-save {
+        background-color: #336699;
+        color: #fff;
+        border: 2px solid #336699;
+    }
+
+    .btn:hover {
+        background-color: #000;
+        color: #fff;
+    }
+</style>
+
+<h2 class="title-with-button">
+    Your Tasks
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Create</button>  
+</h2>   
+<div class="task-list">
+    @if (Model.Count > 0)
+    {
+        @foreach (var task in Model)
+        {
+            <div class="task-card">
+                <div class="task-title">@task.Name</div>
+                <div class="task-info">
+                    <div>Description: @task.Description</div>
+                    <div class="task-status">Status: @task.Status</div>
+                    <div class="task-priority">Priority: @task.Priority</div>
+                    <div class="actions">
+                        <a href="#">Edit</a> |
+                        <a href="#">Delete</a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>No tasks available.</p>
+    }
+
+    <div id="exampleModal" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">New task</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                       @await Html.PartialAsync("_NewTask", new TaskModel())
+                    </div>
+                </div>
+            </div>
+        </div>
