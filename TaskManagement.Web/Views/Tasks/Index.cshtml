@@ -3,6 +3,7 @@
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 <style>
@@ -95,6 +96,22 @@
         color: #fff;
     }
 </style>
+<style>
+    .delete-container {
+        position: relative;
+    }
+    .delete-icon {
+        cursor: pointer;
+        font-size: 20px;
+        position: absolute;
+        right: 5px;
+        color: #0000FF;
+        transition: color 0.3s ease;
+    }
+    .delete-icon:hover {
+        color: red;
+    }
+</style>
 
 <h2 class="title-with-button">
     Your Tasks
@@ -105,25 +122,48 @@
     {
         @foreach (var task in Model)
         {
-            <div class="task-card">
+         <div class="task-card">
+            <div class="delete-container">
+                <div class="delete-container">
+                     <a href="@Url.Action("DeleteTask", "Tasks", new { id = task.Id})" data-toggle="modal" data-target="#confirmModal-@task.Id"
+                     data-task-id="@task.Id"
+                     data-task-title="@task.Name">
+                        <i class="fas fa-times delete-icon"></i>
+                    </a>
+                </div>
+            </div>
                 <div class="task-title">@task.Name</div>
                 <div class="task-info">
                     <div>Description: @task.Description</div>
                     <div class="task-status">Status: @task.Status</div>
                     <div class="task-priority">Priority: @task.Priority</div>
                     <div class="actions">
-                        <a href="#">Edit</a> |
-                        <a href="#">Delete</a>
+                        <a href="#">Edit</a>
                     </div>
                 </div>
-            </div>
+        </div>
+
+          <div id="confirmModal-@task.Id" class="modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Delete @task.Name task ?</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                   @await Html.PartialAsync("_DeleteConfirmation", task)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
         }
     }
     else
     {
         <p>No tasks available.</p>
     }
-
     <div id="exampleModal" class="modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -139,3 +179,5 @@
                 </div>
             </div>
         </div>
+
+      

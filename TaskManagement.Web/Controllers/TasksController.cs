@@ -44,5 +44,19 @@ namespace TaskManagement.Web.Controllers
             await _dbContext.SaveChangesAsync();
             return LocalRedirect("/tasks");
         }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteTask(Guid id)
+        {
+            var CurrentTask =await _dbContext.Tasks.FindAsync(id);
+            if (CurrentTask == null)
+            {
+                return NotFound();
+            }
+            _dbContext.Tasks.Remove(CurrentTask);
+            await _dbContext.SaveChangesAsync();
+            return LocalRedirect("/tasks");
+        }
     }
 }
