@@ -125,9 +125,7 @@
          <div class="task-card">
             <div class="delete-container">
                 <div class="delete-container">
-                     <a href="@Url.Action("DeleteTask", "Tasks", new { id = task.Id})" data-toggle="modal" data-target="#confirmModal-@task.Id"
-                     data-task-id="@task.Id"
-                     data-task-title="@task.Name">
+                     <a href="@Url.Action("DeleteTask", "Tasks", new { id = task.Id})" data-toggle="modal" data-target="#confirmModal-@task.Id">
                         <i class="fas fa-times delete-icon"></i>
                     </a>
                 </div>
@@ -138,7 +136,7 @@
                     <div class="task-status">Status: @task.Status</div>
                     <div class="task-priority">Priority: @task.Priority</div>
                     <div class="actions">
-                        <a href="#">Edit</a>
+                        <a data-toggle="modal" data-target="#editTaskModal-@task.Id">Edit</a>
                     </div>
                 </div>
         </div>
@@ -158,6 +156,22 @@
                             </div>
                         </div>
                     </div>
+
+            <div id="editTaskModal-@task.Id" class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">New task</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            @await Html.PartialAsync("_EditTask", task)
+                        </div>
+                    </div>
+                </div>
+            </div>
         }
     }
     else
