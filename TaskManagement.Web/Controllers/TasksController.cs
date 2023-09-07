@@ -14,7 +14,7 @@ namespace TaskManagement.Web.Controllers
         private readonly TaskManagementDbContext _dbContext;
         private readonly UserManager<UserEntity> _userManager;
         private readonly IMapper _mapper;
-        public TasksController(TaskManagementDbContext dbContext, UserManager<UserEntity> user, IMapper mapper = null)
+        public TasksController(TaskManagementDbContext dbContext, UserManager<UserEntity> user, IMapper mapper)
         {
             _userManager = user;
             _dbContext = dbContext;
@@ -28,6 +28,7 @@ namespace TaskManagement.Web.Controllers
             var taskModels = _mapper.Map<List<TaskModel>>(userTasks);
             return View(taskModels);
         }
+
         public async Task<IActionResult> CreateTask(TaskModel model)
         {
             var userName = _userManager.GetUserName(User);
@@ -55,6 +56,23 @@ namespace TaskManagement.Web.Controllers
                 return NotFound();
             }
             _dbContext.Tasks.Remove(CurrentTask);
+            await _dbContext.SaveChangesAsync();
+            return LocalRedirect("/tasks");
+        }
+
+        [HttpPost, ActionName("Edit")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditTask(TaskModel model)
+        {
+            var task = await _dbContext.Tasks.FindAsync(model.Id);
+            if (task == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(model, task);
+
+            _dbContext.Tasks.Update(task);
             await _dbContext.SaveChangesAsync();
             return LocalRedirect("/tasks");
         }

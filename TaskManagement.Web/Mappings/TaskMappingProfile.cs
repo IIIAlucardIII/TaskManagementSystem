@@ -8,7 +8,8 @@ namespace TaskManagement.Web.Mappings
     {
         public TaskMappingProfile()
         {
-            CreateMap<TaskEntity, TaskModel>();
+            CreateMap<TaskEntity, TaskModel>()
+                .ReverseMap();
         }
     }
 }
