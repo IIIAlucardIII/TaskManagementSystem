@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,11 +15,14 @@ namespace TaskManagement.Web.Controllers
         private readonly TaskManagementDbContext _dbContext;
         private readonly UserManager<UserEntity> _userManager;
         private readonly IMapper _mapper;
-        public TasksController(TaskManagementDbContext dbContext, UserManager<UserEntity> user, IMapper mapper)
+        private readonly IValidator<TaskModel> _taskModelValidator;
+
+        public TasksController(TaskManagementDbContext dbContext, UserManager<UserEntity> user, IMapper mapper, IValidator<TaskModel> taskModelValidator)
         {
             _userManager = user;
             _dbContext = dbContext;
             _mapper = mapper;
+            _taskModelValidator = taskModelValidator;
         }
         public IActionResult Index()
         {
@@ -29,8 +33,22 @@ namespace TaskManagement.Web.Controllers
             return View(taskModels);
         }
 
-        public async Task<IActionResult> CreateTask(TaskModel model)
+        [HttpPost]
+        public async Task<IActionResult> CreateTask([FromForm]TaskModel model)
         {
+            var validationResult = _taskModelValidator.Validate(model);
+
+            if (!validationResult.IsValid)
+            {
+                foreach (var error in validationResult.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
+
+                //return BadRequest(ModelState);
+                return NoContent();
+            }
+
             var userName = _userManager.GetUserName(User);
             var newEntity = new TaskEntity
             {
