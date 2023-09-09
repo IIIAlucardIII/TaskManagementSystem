@@ -2,14 +2,19 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TaskManagement.Persistence;
 using TaskManagment.Domain;
-using AutoMapper;
 using System.Reflection;
+using TaskManagement.Web.Models;
+using FluentValidation;
+using TaskManagement.Web.Validation;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddRazorPages();
+builder.Services.AddScoped<IValidator<TaskModel>, TaskModelValidator>();
+builder.Services.AddFluentValidationClientsideAdapters();
 builder.Services.AddDbContext<TaskManagementDbContext>(options =>
     options.UseSqlServer(connectionString));
 
@@ -22,6 +27,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddIdentity<UserEntity, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<TaskManagementDbContext>();
 builder.Services.AddControllersWithViews();
+
 builder.Services.ConfigureApplicationCookie(options =>
     {
         options.LoginPath = "/Identity/Account/Login";
