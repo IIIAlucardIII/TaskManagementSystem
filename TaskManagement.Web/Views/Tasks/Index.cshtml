@@ -112,11 +112,31 @@
         color: red;
     }
 </style>
+<style>
+    .custom-form {
+    width: 89.5%;
+}
+</style>
 
 <h2 class="title-with-button">
     Your Tasks
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Create</button>  
-</h2>   
+    <div class="d-flex align-items-center">
+        <button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#exampleModal">Create</button>
+        <form class="custom-form" asp-action="Index" method="GET">
+            <div class="input-group">
+                @Html.TextBox("searchValue", null, new {
+                    Class = "form-control",
+                    placeholder="Search..."
+                })
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</h2>
 <div class="task-list">
     @if (Model.Count > 0)
     {
@@ -185,7 +205,7 @@
                         <h5 class="modal-title">New task</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
-                        </button>
+                        </button>   
                     </div>
                     <div class="modal-body">
                        @await Html.PartialAsync("_NewTask", new TaskModel())
