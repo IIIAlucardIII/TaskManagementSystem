@@ -24,10 +24,23 @@ namespace TaskManagement.Web.Controllers
             _mapper = mapper;
             _taskModelValidator = taskModelValidator;
         }
-        public IActionResult Index()
+        public IActionResult Index(string searchValue)
         {
+            string search = null;
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                search = searchValue.ToLower();
+            }
+
             var userName = _userManager.GetUserName(User);
-            var userTasks = _dbContext.Tasks.Where(t => t.CreatedBy.Email == userName).ToList();
+            var userTasks = _dbContext
+                .Tasks
+                .Where(t => t.CreatedBy.Email == userName && 
+                    (string.IsNullOrEmpty(search) ||
+
+                    t.Name.ToLower().Contains(search) ||
+                    t.Description.ToLower().Contains(search))).OrderByDescending(d => d.EditedAt)
+                .ToList();
 
             var taskModels = _mapper.Map<List<TaskModel>>(userTasks);
             return View(taskModels);
@@ -93,6 +106,11 @@ namespace TaskManagement.Web.Controllers
             _dbContext.Tasks.Update(task);
             await _dbContext.SaveChangesAsync();
             return LocalRedirect("/tasks");
+        }
+        public IActionResult Search(SearchTaskModel searchTask)
+        {
+            var searchResults = searchTask; 
+            return View("SearchResults", searchResults);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TaskManagment.Domain;
 using TaskManagment.Domain.Enums;
@@ -16,6 +17,8 @@ namespace TaskManagement.Persistence
                 var services = scope.ServiceProvider;
                 var context = services.GetRequiredService<TaskManagementDbContext>();
                 var userManager = services.GetRequiredService<UserManager<UserEntity>>();
+                context.Database.Migrate();
+
                 if (!context.Users.Any())
                 {
                     var user = new UserEntity()
