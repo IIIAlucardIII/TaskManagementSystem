@@ -8,6 +8,10 @@ namespace TaskManagement.Web.Mappings
     {
         public TaskMappingProfile()
         {
+            CreateMap<TaskEntity, EditTaskModel>()
+                .ReverseMap();
+            CreateMap<TaskEntity, CreateTaskModel>()
+                .ReverseMap();
             CreateMap<TaskEntity, TaskModel>()
                 .ReverseMap();
         }

@@ -15,14 +15,12 @@ namespace TaskManagement.Web.Controllers
         private readonly TaskManagementDbContext _dbContext;
         private readonly UserManager<UserEntity> _userManager;
         private readonly IMapper _mapper;
-        private readonly IValidator<TaskModel> _taskModelValidator;
 
-        public TasksController(TaskManagementDbContext dbContext, UserManager<UserEntity> user, IMapper mapper, IValidator<TaskModel> taskModelValidator)
+        public TasksController(TaskManagementDbContext dbContext, UserManager<UserEntity> user, IMapper mapper)
         {
             _userManager = user;
             _dbContext = dbContext;
             _mapper = mapper;
-            _taskModelValidator = taskModelValidator;
         }
         public IActionResult Index(string searchValue)
         {
@@ -47,21 +45,8 @@ namespace TaskManagement.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTask([FromForm]TaskModel model)
+        public async Task<IActionResult> CreateTask([FromForm]CreateTaskModel model)
         {
-            var validationResult = _taskModelValidator.Validate(model);
-
-            if (!validationResult.IsValid)
-            {
-                foreach (var error in validationResult.Errors)
-                {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-                }
-
-                //return BadRequest(ModelState);
-                return NoContent();
-            }
-
             var userName = _userManager.GetUserName(User);
             var newEntity = new TaskEntity
             {
@@ -70,7 +55,6 @@ namespace TaskManagement.Web.Controllers
                 Priority = model.Priority,
                 CreatedBy = await _userManager.FindByNameAsync(userName),
                 CreatedDate = DateTime.Now,
-                Status = model.Status,
             };
             _dbContext.Tasks.Add(newEntity);
             await _dbContext.SaveChangesAsync();
@@ -93,7 +77,7 @@ namespace TaskManagement.Web.Controllers
 
         [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditTask(TaskModel model)
+        public async Task<IActionResult> EditTask(EditTaskModel model)
         {
             var task = await _dbContext.Tasks.FindAsync(model.Id);
             if (task == null)
