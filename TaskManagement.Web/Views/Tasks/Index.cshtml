@@ -1,4 +1,5 @@
-﻿
+﻿@using TaskManagment.Domain.Enums;
+
 @model List<TaskModel>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
@@ -153,7 +154,7 @@
                 <div class="task-title">@task.Name</div>
                 <div class="task-info">
                     <div>Description: @task.Description</div>
-                    <div class="task-status">Status: @task.Status</div>
+                    <div id="status-container" class="task-status">Status: @task.Status.ToString()</div>
                     <div class="task-priority">Priority: @task.Priority</div>
                     <div class="actions">
                         <a data-toggle="modal" data-target="#editTaskModal-@task.Id">Edit</a>
@@ -187,7 +188,13 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            @await Html.PartialAsync("_EditTask", task)
+                            @await Html.PartialAsync("_EditTask", new EditTaskModel(){
+                                Id = task.Id,
+                                Description = task.Description,
+                                Name = task.Name,
+                                Priority = task.Priority,
+                                Status = task.Status
+                            })
                         </div>
                     </div>
                 </div>
@@ -208,13 +215,13 @@
                         </button>   
                     </div>
                     <div class="modal-body">
-                       @await Html.PartialAsync("_NewTask", new TaskModel())
+                       @await Html.PartialAsync("_NewTask", new CreateTaskModel())
                     </div>
                 </div>
             </div>
         </div>
 
-      
+
                 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
 }

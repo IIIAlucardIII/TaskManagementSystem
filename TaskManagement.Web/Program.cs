@@ -13,7 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddRazorPages();
-builder.Services.AddScoped<IValidator<TaskModel>, TaskModelValidator>();
+builder.Services.AddScoped<IValidator<CreateTaskModel>, CreateTaskModelValidator>();
+builder.Services.AddScoped<IValidator<EditTaskModel>, EditTaskModelValidator>();
+
 builder.Services.AddFluentValidationClientsideAdapters();
 builder.Services.AddDbContext<TaskManagementDbContext>(options =>
     options.UseSqlServer(connectionString));
