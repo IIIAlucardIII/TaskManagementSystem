@@ -1,63 +1,40 @@
-﻿using AutoMapper;
-using FluentValidation;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using TaskManagement.Persistence;
+using TaskManagement.Web.Commands;
 using TaskManagement.Web.Models;
-using TaskManagment.Domain;
+using TaskManagement.Web.Queryes;
 
 namespace TaskManagement.Web.Controllers
 {
     [Authorize]
     public class TasksController : Controller
     {
-        private readonly TaskManagementDbContext _dbContext;
-        private readonly UserManager<UserEntity> _userManager;
-        private readonly IMapper _mapper;
+        private readonly IMediator _mediatR;
 
-        public TasksController(TaskManagementDbContext dbContext, UserManager<UserEntity> user, IMapper mapper)
+        public TasksController(IMediator mediatR)
         {
-            _userManager = user;
-            _dbContext = dbContext;
-            _mapper = mapper;
+            _mediatR = mediatR;
         }
-        public IActionResult Index(string searchValue)
+
+        public async Task<IActionResult>  Index(string searchValue)
         {
-            string search = null;
-            if (!string.IsNullOrEmpty(searchValue))
-            {
-                search = searchValue.ToLower();
-            }
-
-            var userName = _userManager.GetUserName(User);
-            var userTasks = _dbContext
-                .Tasks
-                .Where(t => t.CreatedBy.Email == userName && 
-                    (string.IsNullOrEmpty(search) ||
-
-                    t.Name.ToLower().Contains(search) ||
-                    t.Description.ToLower().Contains(search))).OrderByDescending(d => d.EditedAt)
-                .ToList();
-
-            var taskModels = _mapper.Map<List<TaskModel>>(userTasks);
-            return View(taskModels);
+          var result = await _mediatR.Send(new GetTasksQuery
+          {
+              SearchValue = searchValue,
+              User = User
+          });
+          return View(result);
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateTask([FromForm]CreateTaskModel model)
         {
-            var userName = _userManager.GetUserName(User);
-            var newEntity = new TaskEntity
+            await _mediatR.Send(new CreateTaskCommand
             {
-                Name = model.Name,
-                Description = model.Description,
-                Priority = model.Priority,
-                CreatedBy = await _userManager.FindByNameAsync(userName),
-                CreatedDate = DateTime.Now,
-            };
-            _dbContext.Tasks.Add(newEntity);
-            await _dbContext.SaveChangesAsync();
+                CreateTaskModel = model,
+                User = User
+            });
             return LocalRedirect("/tasks");
         }
 
@@ -65,36 +42,24 @@ namespace TaskManagement.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteTask(Guid id)
         {
-            var CurrentTask =await _dbContext.Tasks.FindAsync(id);
-            if (CurrentTask == null)
-            {
-                return NotFound();
-            }
-            _dbContext.Tasks.Remove(CurrentTask);
-            await _dbContext.SaveChangesAsync();
-            return LocalRedirect("/tasks");
+           await _mediatR.Send(new DeleteTaskCommand 
+           {
+               User = User,
+               Id = id
+           });
+           return LocalRedirect("/tasks");
         }
 
         [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditTask(EditTaskModel model)
         {
-            var task = await _dbContext.Tasks.FindAsync(model.Id);
-            if (task == null)
+            await _mediatR.Send(new EditTaskCommand
             {
-                return NotFound();
-            }
-
-            _mapper.Map(model, task);
-
-            _dbContext.Tasks.Update(task);
-            await _dbContext.SaveChangesAsync();
+                EditTaskModel = model,
+                User = User
+            });
             return LocalRedirect("/tasks");
-        }
-        public IActionResult Search(SearchTaskModel searchTask)
-        {
-            var searchResults = searchTask; 
-            return View("SearchResults", searchResults);
         }
     }
 }

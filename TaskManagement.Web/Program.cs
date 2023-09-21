@@ -7,6 +7,7 @@ using TaskManagement.Web.Models;
 using FluentValidation;
 using TaskManagement.Web.Validation;
 using FluentValidation.AspNetCore;
+using TaskManagement.Web.Commands;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,8 @@ builder.Services.AddScoped<IValidator<EditTaskModel>, EditTaskModelValidator>();
 builder.Services.AddFluentValidationClientsideAdapters();
 builder.Services.AddDbContext<TaskManagementDbContext>(options =>
     options.UseSqlServer(connectionString));
+builder.Services.AddMediatR(c => c.RegisterServicesFromAssembly(typeof(CreateTaskCommand).Assembly));
+
 
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
