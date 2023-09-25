@@ -9,6 +9,6 @@ namespace TaskManagment.Domain.Enums
         [Display(Name = "In progress")]
         InProgress,
         [Display(Name = "Completed")]
-        Completed
+        Completed, 
     }
 }

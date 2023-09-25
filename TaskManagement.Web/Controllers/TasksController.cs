@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using TaskManagement.Web.Commands;
 using TaskManagement.Web.Models;
 using TaskManagement.Web.Queryes;
+using TaskManagment.Domain.Enums;
 
 namespace TaskManagement.Web.Controllers
 {
@@ -16,16 +17,17 @@ namespace TaskManagement.Web.Controllers
         {
             _mediatR = mediatR;
         }
-
-        public async Task<IActionResult>  Index(string searchValue)
+        public async Task<IActionResult>  Index(string searchValue, Status? status)
         {
           var result = await _mediatR.Send(new GetTasksQuery
           {
               SearchValue = searchValue,
+              TaskStatus = status,
               User = User
           });
           return View(result);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> CreateTask([FromForm]CreateTaskModel model)

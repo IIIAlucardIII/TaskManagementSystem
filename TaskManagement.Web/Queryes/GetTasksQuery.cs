@@ -2,11 +2,11 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Collections;
 using System.Security.Claims;
 using TaskManagement.Persistence;
 using TaskManagement.Web.Models;
 using TaskManagment.Domain;
+using TaskManagment.Domain.Enums;
 
 namespace TaskManagement.Web.Queryes
 {
@@ -14,18 +14,17 @@ namespace TaskManagement.Web.Queryes
     {
         public ClaimsPrincipal User { get; set; }
         public string SearchValue { get; set; }
+        public Status? TaskStatus { get; set; }
 
     }
     public class GetTasksHandler : IRequestHandler<GetTasksQuery, List<TaskModel>>
     {
         private readonly UserManager<UserEntity> _userManager;
         private readonly TaskManagementDbContext _dbContext;
-        private readonly IMediator _mediatR;
         private readonly IMapper _mapper;
-        public GetTasksHandler(UserManager<UserEntity> userManager, IMediator mediatR, TaskManagementDbContext dbContext, IMapper mapper)
+        public GetTasksHandler(UserManager<UserEntity> userManager, TaskManagementDbContext dbContext, IMapper mapper)
         {
             _userManager = userManager;
-            _mediatR = mediatR;
             _dbContext = dbContext;
             _mapper = mapper;
         }
@@ -38,17 +37,27 @@ namespace TaskManagement.Web.Queryes
             }
 
             var userName = _userManager.GetUserName(request.User);
-            var userTasks = await _dbContext
+            var userTasksQuery = _dbContext
                 .Tasks
                 .Where(t => t.CreatedBy.Email == userName &&
                     (string.IsNullOrEmpty(search) ||
-
                     t.Name.ToLower().Contains(search) ||
-                    t.Description.ToLower().Contains(search))).OrderByDescending(d => d.EditedAt)
+                    t.Description.ToLower().Contains(search)));
+
+            if (request.TaskStatus != null)
+            {
+                    var status = request.TaskStatus;
+                    userTasksQuery = userTasksQuery.Where(t => t.Status == status);
+               
+            }
+            
+            var userTasks = await userTasksQuery
+                .OrderByDescending(d => d.EditedAt)
                 .ToListAsync();
 
             var taskModels = _mapper.Map<List<TaskModel>>(userTasks);
             return taskModels;
         }
+
     }
 }
